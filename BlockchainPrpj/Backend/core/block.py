@@ -1,5 +1,5 @@
 # BlockchainPrpj/Backend/core/block.py
-class Block:
+class Block: 
     def __init__(self, Height, Blocksize, BlockHeader, TxCount, Txs):
         self.Height = Height
         self.Blocksize = Blocksize

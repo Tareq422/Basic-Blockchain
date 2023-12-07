@@ -59,3 +59,8 @@ class Blockchaindb(db):
 
         if data:
             return data[-1]    
+
+class AccountDB(db):
+    def __init__(self):
+        self.filename = "account"
+        super().__init__()

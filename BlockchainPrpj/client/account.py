@@ -1,7 +1,8 @@
 import sys
-sys.path.append('/Users/ziyad/Desktop/Basic-Blockchain-main')
+sys.path.append('/blockchain/Basic-Blockchain')
 from BlockchainPrpj.Backend.core.EllepticCurve.EllepticCurve import Sha256Point
 from BlockchainPrpj.Backend.Util.util import hash160, hash256
+from BlockchainPrpj.Backend.core.Database.database import AccountDB
 import secrets
 
 class account: 
@@ -11,8 +12,8 @@ class account:
 
         G  = Sha256Point(Gx,Gy)
 
-        privateKey = secrets.randbits(256)
-        unCompressedPublicKey = privateKey * G 
+        self.privateKey = secrets.randbits(256)
+        unCompressedPublicKey = self.privateKey * G 
         xpoint = unCompressedPublicKey.x
         ypoint = unCompressedPublicKey.y
         if ypoint.num % 2 == 0: 
@@ -39,11 +40,13 @@ class account:
         while num > 0: 
             num , mod = divmod(num, 58)    
             result = BASE58_ALPHABET[mod] + result   
-        PublicAdress = prefix + result 
-        print( f"Private Key {privateKey}")
-        print(f"Public Key {PublicAdress}")
+        self.PublicAddress = prefix + result 
+        print( f"Private Key {self.privateKey}")
+        print(f"Public Key {self.PublicAddress}")
 
 
 if __name__ == '__main__':
     acct = account()
     acct.CreateKeys()
+    account_db = AccountDB()
+    account_db.write([acct.__dict__])

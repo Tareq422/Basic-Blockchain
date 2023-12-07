@@ -1,6 +1,6 @@
 # Your third file
 import sys
-sys.path.append("/Users/ziyad/Desktop/Basic-Blockchain-main")
+sys.path.append("/blockchain/Basic-Blockchain")
 import time
 from BlockchainPrpj.Backend.core.block import Block
 from BlockchainPrpj.Backend.core.block_Header import BlockHeader
@@ -14,7 +14,7 @@ VERSION = 0
 class Blockchain:
     def __init__(self):
        # self.chain = []
-        self.genesis_block()
+       pass
 
 
     #use the database write method
@@ -39,7 +39,8 @@ class Blockchain:
         timestamp = int(time.time())
         coinbaseInstance = CoinbaseTx(block_height) #BlockHeight
         coinbaseTx = coinbaseInstance.CoinbaseTransaction()
-        merkle_root = ''
+
+        merkle_root = coinbaseTx.TxId
         bits = "ffff001f"
         block_header = BlockHeader(VERSION, prev_block_hash, merkle_root, timestamp, bits)
         block_header.mine()
@@ -48,7 +49,12 @@ class Blockchain:
 
 
     def main(self):
-       
+       lastblock = self.get_last_block()
+
+       if lastblock is None:
+        self.genesis_block()
+
+       else:
         while True:
             lastblock = self.get_last_block()
             block_height = lastblock["Height"]+1

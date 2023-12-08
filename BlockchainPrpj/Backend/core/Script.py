@@ -1,4 +1,5 @@
 from BlockchainPrpj.Backend.Util.util import int_to_little_endian, encode_varint
+from BlockchainPrpj.Backend.core.EllepticCurve.op import OP_CODE_FUNCTION
 
 class Script: 
     def __init__(self, cmds = None):
@@ -6,6 +7,9 @@ class Script:
             self.cmds = []
         else: 
             self.cmds = cmds
+    
+    def __add__(self, other):
+        return Script(self.cmds + other.cmds)
 
     def serialize(self):
         # initialize what we'll send back
@@ -41,6 +45,31 @@ class Script:
         total = len(result)
         # encode_varint the total length of the result and prepend
         return encode_varint(total) + result
+    
+    def evaluate(self, z):
+        cmds = self.cmds[:]
+        stack = []
+        while len(cmds) > 0:
+            cmd = cmds.pop(0)
+
+            if type(cmd) == int:
+                operation = OP_CODE_FUNCTION[cmd]
+
+                if cmd == 172:
+                    if not operation(stack, z):
+                        print(F"Error in Signature Verification")
+                        return False
+                
+                elif not operation(stack):
+                    print(F"Error in Signature Verification")
+                    return False
+            
+            else:
+                stack.append(cmd)
+        return True
+
+
+
 
     @classmethod
     def p2pkh_script(cls, h160):

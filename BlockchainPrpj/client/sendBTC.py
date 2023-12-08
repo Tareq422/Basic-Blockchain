@@ -88,8 +88,9 @@ class SendBTC:
         if self.isBalanceEnough:
             self.TxOuts = self.prepareTxOut()
             self.TxObj = tx(1, self.TxIns, self.TxOuts, 0)
+            self.TxObj.TxId = self.TxObj.id()
             self.signTx()
-            return True
+            return self.TxObj
 
         return False
 

@@ -8,7 +8,7 @@ if defined _OLD_CODEPAGE (
     "%SystemRoot%\System32\chcp.com" 65001 > nul
 )
 
-set VIRTUAL_ENV=C:\blockchain\Basic-Blockchain\.venv
+set VIRTUAL_ENV=D:\Work\Development\Web\Github\ICS440\Basic-Blockchain\.venv
 
 if not defined PROMPT set PROMPT=$P$G
 

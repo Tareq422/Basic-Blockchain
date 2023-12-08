@@ -1,5 +1,5 @@
 import sys
-sys.path.append('/blockchain/Basic-Blockchain')
+sys.path.append('/Work/Development/Web/Github/ICS440/Basic-Blockchain')
 from BlockchainPrpj.Backend.core.EllepticCurve.EllepticCurve import Sha256Point
 from BlockchainPrpj.Backend.Util.util import hash160, hash256
 from BlockchainPrpj.Backend.core.Database.database import AccountDB

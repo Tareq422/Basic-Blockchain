@@ -1,5 +1,5 @@
 #\ BlockchainPrpj/Backend/core/block_Header.py
-from BlockchainPrpj.Backend.Util.util import hash256
+from BlockchainPrpj.Backend.Util.util import hash256, int_to_little_endian, little_endian_to_int
 
 class BlockHeader:
     def __init__(self, version, prevBlockHash, merkleRoot, timestamp, bits):
@@ -11,18 +11,21 @@ class BlockHeader:
         self.nonce = 0
         self.blockHash = ""
 
-    def mine(self):
-        while self.blockHash[:4] != '0000':
-            data_to_hash = (
-                str(self.version)+
-                self.prevBlockHash +
-                self.merkleRoot +
-                str(self.timestamp) +
-                self.bits +
-                str(self.nonce)
+    def mine(self,target):
+        self.blockHash = target + 1
+        while self.blockHash > target:
+            self.blockHash = little_endian_to_int(
+                hash256(
+                    int_to_little_endian(self.version, 4)
+                    + bytes.fromhex(self.prevBlockHash)[::-1]
+                    + bytes.fromhex(self.merkleRoot)
+                    + int_to_little_endian(self.timestamp, 4)
+                    + self.bits
+                    + int_to_little_endian(self.nonce, 4)
+                )
             )
-            data_bytes = data_to_hash.encode()
-            self.blockHash = hash256(data_bytes).hex()
 
             self.nonce += 1
-        print(f"count till the hsash  {self.nonce}", end='\r')    
+            print(f"count till the hsash found  {self.nonce}", end='\r')    
+        self.blockHash = int_to_little_endian(self.blockHash, 32).hex()[::-1]
+        self.bits = self.bits.hex()
